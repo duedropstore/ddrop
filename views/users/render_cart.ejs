@@ -1,0 +1,239 @@
+<% layout('layouts/boilerplate') %>
+    <link rel="stylesheet" href="/stylesheets/stars.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <% if(typeof change_message !='undefined' ){ %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Se Ha Modificado la Cantidad del Articulo
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <% } %>
+            <% if(typeof success_message !='undefined' ){ %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Activated Drop
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <% } %>
+
+                    <div class="accordion" id="timeframeAccordion">
+                        <!-- Weekly Cart Section -->
+                        <div class="card">
+                            <div class="card-header" id="headingWeekly">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link" type="button" data-toggle="collapse"
+                                        data-target="#collapseWeekly" aria-expanded="true"
+                                        aria-controls="collapseWeekly">
+                                        WEEKLY CART
+                                    </button>
+                                </h5>
+                                <a href="/carts/activate_weekly/<%=user_id%>">Activate</a>
+                            </div>
+
+                            <div id="collapseWeekly" class="collapse show" aria-labelledby="headingWeekly"
+                                data-parent="#timeframeAccordion">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <% if(weekly_cart && weekly_cart.pre_orders.length> 0) { %>
+                                            <% weekly_cart.pre_orders.forEach(function(product, index) { %>
+                                                <div class="col-md-4 d-flex align-items-stretch">
+                                                    <div class="card mb-4">
+                                                        <!-- Product Image -->
+                                                        <img src="<%= product.product.images.length ? product.product.images[0].url.replace('http://', 'https://') : 'default_image_url' %>"
+                                                            class="card-img-top" alt="...">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">
+                                                                <%= product.product.title %>
+                                                            </h5>
+                                                            <p class="card-text">
+                                                                <%= product.product.caption %>
+                                                            </p>
+                                                            <p class="card-text">Price: <%= product.price %>
+                                                            </p>
+                                                            <p class="card-text">Quantity: <%= product.quantity %>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% if ((index + 1) % 3===0) { %>
+                                    </div>
+                                    <div class="row">
+                                        <% } %>
+                                            <% }); %>
+                                                <% } else { %>
+                                                    <p>No products found.</p>
+                                                    <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion" id="timeframeAccordion">
+                            <!-- Weekly Cart Section -->
+                            <div class="card">
+                                <div class="card-header" id="headingWeekly">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link" type="button" data-toggle="collapse"
+                                            data-target="#collapseWeekly" aria-expanded="true"
+                                            aria-controls="collapseWeekly">
+                                            BY WEEKLY CART
+                                        </button>
+                                    </h5>
+                                    <a href="/carts/activate_by_weekly/<%=user_id%>">Activate</a>
+                                </div>
+
+                                <div id="collapseWeekly" class="collapse show" aria-labelledby="headingWeekly"
+                                    data-parent="#timeframeAccordion">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <% if(by_weekly_cart && by_weekly_cart.pre_orders.length> 0) { %>
+                                                <% by_weekly_cart.pre_orders.forEach(function(product, index) { %>
+                                                    <div class="col-md-4 d-flex align-items-stretch">
+                                                        <div class="card mb-4">
+                                                            <!-- Product Image -->
+                                                            <img src="<%= product.product.images.length ? product.product.images[0].url.replace('http://', 'https://') : 'default_image_url' %>"
+                                                                class="card-img-top" alt="...">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">
+                                                                    <%= product.product.title %>
+                                                                </h5>
+                                                                <p class="card-text">
+                                                                    <%= product.product.caption %>
+                                                                </p>
+                                                                <p class="card-text">Price: <%= product.price %>
+                                                                </p>
+                                                                <p class="card-text">Quantity: <%= product.quantity %>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <% if ((index + 1) % 3===0) { %>
+                                        </div>
+                                        <div class="row">
+                                            <% } %>
+                                                <% }); %>
+                                                    <% } else { %>
+                                                        <p>No products found.</p>
+                                                        <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion" id="timeframeAccordion">
+                                <!-- Weekly Cart Section -->
+                                <div class="card">
+                                    <div class="card-header" id="headingWeekly">
+                                        <h5 class="mb-0">
+                                            <button class="btn btn-link" type="button" data-toggle="collapse"
+                                                data-target="#collapseWeekly" aria-expanded="true"
+                                                aria-controls="collapseWeekly">
+                                                MONTHLY CART
+                                            </button>
+                                        </h5>
+
+                                        <a href="/carts/activate_monthly/<%=user_id%>">Activate</a>
+                                    </div>
+
+                                    <div id="collapseWeekly" class="collapse show" aria-labelledby="headingWeekly"
+                                        data-parent="#timeframeAccordion">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <% if(monthly_cart && monthly_cart.pre_orders.length> 0) { %>
+                                                    <% monthly_cart.pre_orders.forEach(function(product, index) { %>
+                                                        <div class="col-md-4 d-flex align-items-stretch">
+                                                            <div class="card mb-4">
+                                                                <!-- Product Image -->
+                                                                <img src="<%= product.product.images.length ? product.product.images[0].url.replace('http://', 'https://') : 'default_image_url' %>"
+                                                                    class="card-img-top" alt="...">
+                                                                <div class="card-body">
+                                                                    <h5 class="card-title">
+                                                                        <%= product.product.title %>
+                                                                    </h5>
+                                                                    <p class="card-text">
+                                                                        <%= product.product.caption %>
+                                                                    </p>
+                                                                    <p class="card-text">Price: <%= product.price %>
+                                                                    </p>
+                                                                    <p class="card-text">Quantity: <%= product.quantity
+                                                                            %>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <% if ((index + 1) % 3===0) { %>
+                                            </div>
+                                            <div class="row">
+                                                <% } %>
+                                                    <% }); %>
+                                                        <% } else { %>
+                                                            <p>No products found.</p>
+                                                            <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion" id="timeframeAccordion">
+                                    <!-- Weekly Cart Section -->
+                                    <div class="card">
+                                        <div class="card-header" id="headingWeekly">
+                                            <h5 class="mb-0">
+                                                <button class="btn btn-link" type="button" data-toggle="collapse"
+                                                    data-target="#collapseWeekly" aria-expanded="true"
+                                                    aria-controls="collapseWeekly">
+                                                    OME TIME CART
+                                                </button>
+                                            </h5>
+
+                                            <a href="/carts/activate_one_time/<%=user_id%>">Activate</a>
+                                        </div>
+
+                                        <div id="collapseWeekly" class="collapse show" aria-labelledby="headingWeekly"
+                                            data-parent="#timeframeAccordion">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <% if(one_time_cart && one_time_cart.pre_orders.length> 0) { %>
+                                                        <% one_time_cart.pre_orders.forEach(function(product, index) {
+                                                            %>
+                                                            <div class="col-md-4 d-flex align-items-stretch">
+                                                                <div class="card mb-4">
+                                                                    <!-- Product Image -->
+                                                                    <img src="<%= product.product.images.length ? product.product.images[0].url.replace('http://', 'https://') : 'default_image_url' %>"
+                                                                        class="card-img-top" alt="...">
+                                                                    <div class="card-body">
+                                                                        <h5 class="card-title">
+                                                                            <%= product.product.title %>
+                                                                        </h5>
+                                                                        <p class="card-text">
+                                                                            <%= product.product.caption %>
+                                                                        </p>
+                                                                        <p class="card-text">Price: <%= product.price %>
+                                                                        </p>
+                                                                        <p class="card-text">Quantity: <%=
+                                                                                product.quantity %>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <% if ((index + 1) % 3===0) { %>
+                                                </div>
+                                                <div class="row">
+                                                    <% } %>
+                                                        <% }); %>
+                                                            <% } else { %>
+                                                                <p>No products found.</p>
+                                                                <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Repeat for other timeframes: BY WEEKLY, MONTHLY, ONETIME -->
+                                    <!-- Copy the Weekly Cart block above and adjust IDs, data-targets, and variables for by_weekly_cart, monthly_cart, and one_time_cart accordingly -->
+                                </div>
+
+                                <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+                                <script
+                                    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+                                <script
+                                    src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>

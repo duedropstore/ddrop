@@ -1,0 +1,68 @@
+<% layout('layouts/boilerplate') %>
+
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/stylesheets/stars.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Product Categories</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+            integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    </head>
+
+    <body>
+        <h1>Products in <%= queryCategory %>
+        </h1>
+        <div class="container">
+            <% if(catProducts && catProducts.length> 0) { %>
+                <div class="row">
+                    <% catProducts.forEach(function(product, index) { %>
+                        <div class="col-md-3 mb-4">
+                            <div class="product h-100">
+                                <% if(product.images) { %>
+                                    <img class="img-fluid" src="<%= product.images %>" alt="<%= product.title %>">
+                                    <% } %>
+                                        <h3>
+                                            <%= product.title %>
+                                        </h3>
+                                        <p>Price: $<%= product.price %>
+                                        </p>
+                                        <a href="<%= product.link %>">View Product</a>
+                                        <form action="/carts/add_to_cart" method="GET">
+                                            <p>Quantity</p>
+                                            <select id="how_many" name="how_many" class="form-control">
+                                                <% for (let i=1; i <=5; i++) { %>
+                                                    <option value="<%= i %>">
+                                                        <%= i %>
+                                                    </option>
+                                                    <% } %>
+                                            </select>
+                                            <p>Recurrance</p>
+                                            <select id="time_frame" name="time_frame" class="form-control" required>
+                                                <option value="Weekly">Weekly</option>
+                                                <option value="One Time">One Time</option>
+                                                <option value="By Weekly">By Weekly</option>
+                                                <option value="Monthly">Monthly</option>
+                                            </select>
+                                            <!-- Add to Cart Button -->
+                                            <button class="btn mt-2 btn-outline-secondary btn-block">Add to
+                                                Cart</button>
+                                            <input type="hidden" name="id" value="<%= product.id %>">
+                                        </form>
+                            </div>
+                        </div>
+                        <% if((index + 1) % 4===0 && index + 1 < catProducts.length) { %>
+                </div>
+                <div class="row">
+                    <% } %>
+                        <% }); %>
+                </div>
+                <% } else { %>
+                    <p>No products available in this category.</p>
+                    <% } %>
+        </div>
+    </body>
+
+    </html>

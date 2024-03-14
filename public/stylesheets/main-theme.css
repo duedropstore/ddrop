@@ -1,0 +1,74 @@
+/* Custom Bootstrap code */
+
+@font-face {
+    font-family: 'CoolFont';
+    src: url('./YaroRg-Bold.ttf') format('truetype');
+}
+
+#menuContainer {
+    display: inline-block;
+    width: 300px;
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+
+#menuContainer button {
+    display: inline-block;
+
+}
+
+html * {
+    font-family: 'CoolFont', sans-serif;
+}
+
+.Cool,
+.Cool {
+    font-family: 'CoolFont', sans-serif;
+}
+
+h2,
+h3 {
+    font-family: 'CoolFont', sans-serif;
+    font-weight: 500;
+}
+
+.btn {
+    border-radius: 15px;
+    white-space: normal;
+}
+
+.form-control {
+    border-radius: 15px;
+}
+
+/* Single Posts (show) Custom CSS */
+.single-post-card {
+    border-radius: 15px;
+    transition: 0.3s;
+}
+
+.single-post-card:hover {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 15px;
+}
+
+.single-post-card .carousel-item img {
+    border-radius: 15px;
+    transition: 0.3s;
+}
+
+/* places shows */
+.individual-cards-shows {
+    border-radius: 15px;
+    transition: 0.3s;
+}
+
+.individual-cards-shows:hover {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 15px;
+}
+
+.individual-cards-shows img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+}

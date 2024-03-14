@@ -1,0 +1,113 @@
+<% layout('layouts/boilerplate') %>
+
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/stylesheets/stars.css">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Product Categories</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+            integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+
+        <style>
+            /* Add this to your CSS to create a black outline on your text input */
+            input[type="text"] {
+                border: 1px solid black;
+            }
+
+            .category-container {
+                margin-bottom: 40px;
+            }
+
+            .slider {
+                display: flex;
+                overflow-x: auto;
+                gap: 20px;
+                padding: 10px;
+            }
+
+            .product {
+                flex: 0 0 auto;
+                width: 200px;
+                /* Adjust based on your preference */
+                border: 1px solid #ccc;
+                padding: 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .add-to-cart-btn {
+                display: block;
+                margin-top: 10px;
+                background-color: #007bff;
+                color: white;
+                text-align: center;
+                padding: 5px 10px;
+                text-decoration: none;
+                border-radius: 5px;
+            }
+
+            .img-fluid {
+                max-width: 100%;
+                height: auto;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>By Store</h1>
+        <a href="/store/central_mkt">Central Market</a>
+        <a href="/store/ranch_99">Ranch 99</a>
+        <a href="/store/costco">Costco</a>
+        <h1>All Categories</h1>
+        <% Object.keys(categorizedProducts).forEach(function(category) { %>
+            <div class="category-container">
+                <h2>
+                    <%= category %> <a href="/products/render_cat?category=<%=category%>">View All</a>
+                </h2>
+                <div class="slider">
+                    <% categorizedProducts[category].slice(0, 10).forEach(function(product) { %>
+                        <div class="product">
+                            <!-- Render only the first image for each product, if it exists -->
+                            <% if(product.images) { %>
+                                <img class="img-fluid" src="<%=product.images%>" alt="<%=product.title%>">
+                                <% } %>
+
+                                    <p>
+
+                                        <%= product.title %>
+                                    </p>
+                                    <p>Price: $<%= product.price %>
+                                    </p>
+                                    <a href="<%= product.link %>">View Product</a>
+                                    <form action="/carts/add_to_cart" method="GET">
+                                        <p>Quantity</p>
+                                        <select id="how_many" name="how_many" class="form-control">
+                                            <% for (let i=1; i <=5; i++) { %>
+                                                <option value="<%= i %>">
+                                                    <%= i %>
+                                                </option>
+                                                <% } %>
+                                        </select>
+                                        <p>Recurrance</p>
+                                        <select id="time_frame" name="time_frame" class="form-control" required>
+                                            <option value="Weekly">Weekly</option>
+                                            <option value="One Time">One Time</option>
+                                            <option value="By Weekly">By Weekly</option>
+                                            <option value="Monthly">Monthly</option>
+                                        </select>
+                                        <!-- Add to Cart Button -->
+                                        <button class="btn mt-2 btn-outline-secondary btn-block">Add to
+                                            Cart</button>
+                                        <input type="hidden" name="id" value="<%= product.id %>">
+                                    </form>
+                        </div>
+                        <% }); %>
+                </div>
+            </div>
+            <% }); %>
+    </body>
+
+    </html>
