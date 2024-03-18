@@ -1,4 +1,4 @@
-<% layout('layouts/boilerplate') %>
+<% layout('layouts/boilerplate_no_nav') %>
 
     <!DOCTYPE html>
     <html>
@@ -6,32 +6,161 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="/stylesheets/stars.css">
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Product Categories</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
             integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+
+        <style>
+            /* Add this to your CSS to create a black outline on your text input */
+
+
+            .navbar {
+                background-color: white;
+                /* Sets the background color to white */
+                padding-top: 0.25rem;
+                /* Reduces the top padding */
+                padding-bottom: 0.25rem;
+                /* Reduces the bottom padding */
+            }
+
+            .nav-link:hover {
+                text-decoration: underline;
+            }
+
+            @media (min-width: 700px) {
+                .form-inline .form-control {
+                    width: 250px;
+                    /* Adjust based on your preference */
+                }
+            }
+
+
+
+            input[type="text"] {
+                border: 1px solid black;
+            }
+
+            .category-container {
+                margin-bottom: 40px;
+            }
+
+            .slider {
+                display: flex;
+                overflow-x: auto;
+                gap: 20px;
+                padding: 10px;
+            }
+
+            .product {
+                flex: 0 0 auto;
+                width: 200px;
+                /* Adjust based on your preference */
+                border: 1px solid #ccc;
+                padding: 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .add-to-cart-btn {
+                display: block;
+                margin-top: 10px;
+                background-color: #007bff;
+                color: white;
+                text-align: center;
+                padding: 5px 10px;
+                text-decoration: none;
+                border-radius: 5px;
+            }
+
+            .img-fluid {
+                max-width: 100%;
+                height: auto;
+            }
+        </style>
     </head>
 
+
     <body>
+
+        <nav class="navbar sticky-top navbar-expand-lg navbar-light" style="border-bottom: 1px solid #000;">
+            <div class="container-fluid">
+                <!-- Navbar Toggler -->
+                <!-- Mobile Search Form (visible only on xs to md) -->
+                <div class="mx-auto d-none d-lg-block">
+                    <form class="form-inline d-flex justify-content-center">
+                        <input class="form-control" type="search" placeholder="Search for products" aria-label="Search">
+                        <button class="btn btn-outline-success ml-2" type="submit">Search</button>
+                    </form>
+                </div>
+
+                <div class="mx-auto d-lg-none">
+                    <form class="form-inline d-flex justify-content-center">
+                        <input class="form-control" type="search" placeholder="Search for products" aria-label="Search">
+                        <button class="btn btn-outline-success ml-2" type="submit">Search</button>
+                    </form>
+                </div>
+
+                <!-- Centered Search Form -->
+
+                <!-- Collapsible content -->
+                <!-- Links to show in the burger bar -->
+                <div class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <%if(!currentUser) {%>
+
+                        <a class="nav-item nav-link text-dark" href="/login">Login</a>
+                        <a class="nav-item nav-link text-dark" href="/register">Register</a>
+                        <%}%>
+
+
+                </div>
+                <% if (catProducts){%>
+                    <div class="slider">
+                        <% for (let category of subCategories) { %>
+                            <div class="product">
+                                <a href="/products/render_sub_cat?sub_category=<%=category%>">
+                                    <%=category%>>
+                                </a>
+                            </div>
+                            <% }; %>
+                    </div>
+                    <%}%>
+
+
+
+            </div>
+        </nav>
+
+        <style>
+            .nav-link:hover {
+                text-decoration: underline;
+            }
+
+            @media (min-width: 700px) {
+                .form-inline .form-control {
+                    width: 250px;
+                    /* Adjust based on your preference */
+                }
+            }
+        </style>
         <h1>Products in <%= queryCategory %>
         </h1>
         <div class="container">
             <% if(catProducts && catProducts.length> 0) { %>
                 <div class="row">
                     <% catProducts.forEach(function(product, index) { %>
-                        <div class="col-md-3 mb-4">
+                        <div class="col-6 col-md-3 mb-4"> <!-- Notice the change here -->
                             <div class="product h-100">
                                 <% if(product.images) { %>
                                     <img class="img-fluid" src="<%= product.images %>" alt="<%= product.title %>">
                                     <% } %>
-                                        <h3>
-                                            <%= product.title %>
-                                        </h3>
-                                        <p>Price: $<%= product.price %>
-                                        </p>
-                                        <a href="<%= product.link %>">View Product</a>
+                                        <small> $<%= product.price %> <br>
+                                                <%= product.title %></small><br>
+
+
+                                        <!-- <a href="<%= product.link %>">View Product</a> -->
                                         <form action="/carts/add_to_cart" method="GET">
-                                            <p>Quantity</p>
+                                            <small>Quantity</small>
                                             <select id="how_many" name="how_many" class="form-control">
                                                 <% for (let i=1; i <=5; i++) { %>
                                                     <option value="<%= i %>">
@@ -39,7 +168,7 @@
                                                     </option>
                                                     <% } %>
                                             </select>
-                                            <p>Recurrance</p>
+                                            <small>Recurrance</small>
                                             <select id="time_frame" name="time_frame" class="form-control" required>
                                                 <option value="Weekly">Weekly</option>
                                                 <option value="One Time">One Time</option>
@@ -47,8 +176,8 @@
                                                 <option value="Monthly">Monthly</option>
                                             </select>
                                             <!-- Add to Cart Button -->
-                                            <button class="btn mt-2 btn-outline-secondary btn-block">Add to
-                                                Cart</button>
+                                            <button class="btn mt-2 btn-outline-secondary btn-block"><small>Add to
+                                                    Cart</small></button>
                                             <input type="hidden" name="id" value="<%= product.id %>">
                                         </form>
                             </div>
@@ -63,6 +192,7 @@
                     <p>No products available in this category.</p>
                     <% } %>
         </div>
+
     </body>
 
     </html>

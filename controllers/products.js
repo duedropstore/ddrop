@@ -62,7 +62,7 @@ module.exports.renderProducts = async (req, res) => {
             title: product.title,
             price: product.price,
             link: product.link, // Assuming there's a link field
-            images: product.images[0].url.replace("http://", "https://") // Map image objects to their URLs
+            images: product.images[0].url// Map image objects to their URLs
         };
 
         // Check if the category already exists in the categorizedProducts object
@@ -76,6 +76,7 @@ module.exports.renderProducts = async (req, res) => {
     });
 
     const post = categorizedProducts['Pantry'] ? categorizedProducts['Pantry'][0] : null;
+    console.log(categorizedProducts)
     res.render('products/render', { categorizedProducts, post });
 };
 
@@ -336,12 +337,15 @@ module.exports.renderCat = async (req, res) => {
     // Fetch all products then filter by category inclusivity
     const allProducts = await Product.find({});
     const catProducts = [];
+    const prods = []
 
     // Iterate over each fetched product
     allProducts.forEach(product => {
         // Check if any of the categories of the product include the queryCategory
         // Assuming the category field is an array of strings
+
         if (product.category.some(cat => cat.toLowerCase().includes(queryCategory.toLowerCase()))) {
+            prods.push(product)
             // Simplify the product representation for the view
             const productForView = {
                 id: product._id,
@@ -355,7 +359,12 @@ module.exports.renderCat = async (req, res) => {
             catProducts.push(productForView);
         }
     });
+    const subCategories = [...new Set(prods.flatMap(product => product.sub_category))];
+
+    // Sort subcategories if needed.
+    subCategories.sort();
+    console.log(subCategories)
 
     // Render the view with the filtered, categorized products
-    res.render('products/renderCat', { catProducts, queryCategory });
+    res.render('products/renderCat', { catProducts, queryCategory, subCategories });
 };

@@ -1,0 +1,36 @@
+<style>
+    .footer {
+        position: fixed;
+        /* Fixes the footer position */
+        bottom: 0;
+        /* Anchors the footer to the bottom of the screen */
+        width: 100%;
+        /* Ensures the footer extends full width */
+        z-index: 100;
+        /* Ensures the footer stays above other content */
+        background-color: white;
+    }
+
+    /* To ensure content is not hidden behind the footer */
+    body {
+        padding-bottom: 100px;
+        /* Add padding equal to the height of the footer */
+    }
+</style>
+
+
+<footer class="footer bg-dark py-3 mt-auto bg-primary">
+    <footer class="footer bg-dark py-3 text-center">
+        <button class="nav-btn" onclick="location.href='/products'">
+            <img src="https://res.cloudinary.com/squr/image/upload/v1710771278/path-to-home-icon.png_hd6crp.png"
+                alt="Home">
+        </button>
+        <button class="nav-btn" onclick="location.href='/carts/render'">
+            <img src="https://res.cloudinary.com/squr/image/upload/v1710771537/kyfrohwfvdhhpi8hg5gf.png" alt="Cart">
+        </button>
+        <button class="nav-btn" onclick="location.href='/aisles'">
+            <img src="https://res.cloudinary.com/squr/image/upload/v1710771617/icons8-four-squares-50_ein4h6.png"
+                alt="Aisles">
+        </button>
+    </footer>
+</footer>
