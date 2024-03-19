@@ -32,17 +32,20 @@ module.exports.login = async (req, res) => {
 
     // Iterate over each product
     products.forEach(product => {
-        // Assuming each product has only one category for simplicity
-        const category = product.category[0];
 
-        // Check if the category already exists in the categorizedProducts object
-        if (!categorizedProducts[category]) {
-            // If not, create a new array for this category
-            categorizedProducts[category] = [];
+        if (product.title.includes('Central Market') || product.title.includes('Mi Tienda')) {
+            // Assuming each product has only one category for simplicity
+            const category = product.category[0];
+
+            // Check if the category already exists in the categorizedProducts object
+            if (!categorizedProducts[category]) {
+                // If not, create a new array for this category
+                categorizedProducts[category] = [];
+            }
+
+            // Add the product to the appropriate category array
+            categorizedProducts[category].push(product);
         }
-
-        // Add the product to the appropriate category array
-        categorizedProducts[category].push(product);
     });
     const post = categorizedProducts['Bakery'][0]
 
@@ -78,17 +81,20 @@ module.exports.register = async (req, res, next) => {
 
             // Iterate over each product
             products.forEach(product => {
-                // Assuming each product has only one category for simplicity
-                const category = product.category[0];
 
-                // Check if the category already exists in the categorizedProducts object
-                if (!categorizedProducts[category]) {
-                    // If not, create a new array for this category
-                    categorizedProducts[category] = [];
+                if (product.title.includes('Central Market') || product.title.includes('Mi Tienda')) {
+                    // Assuming each product has only one category for simplicity
+                    const category = product.category[0];
+
+                    // Check if the category already exists in the categorizedProducts object
+                    if (!categorizedProducts[category]) {
+                        // If not, create a new array for this category
+                        categorizedProducts[category] = [];
+                    }
+
+                    // Add the product to the appropriate category array
+                    categorizedProducts[category].push(product);
                 }
-
-                // Add the product to the appropriate category array
-                categorizedProducts[category].push(product);
             });
             const post = categorizedProducts['Bakery'][0]
             res.render('products/render', { categorizedProducts, post })

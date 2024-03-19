@@ -53,26 +53,28 @@ module.exports.renderProducts = async (req, res) => {
 
     // Iterate over each product
     products.forEach(product => {
-        // Assuming each product has a category and images field
-        const category = product.category[0]; // Simplified assumption of one category per product
+        if (product.title.includes('Central Market') || product.title.includes('Mi Tienda')) {
+            // Assuming each product has a category and images field
+            const category = product.category[0]; // Simplified assumption of one category per product
 
-        // Simplify the product representation for the view
-        const productForView = {
-            id: product._id,
-            title: product.title,
-            price: product.price,
-            link: product.link, // Assuming there's a link field
-            images: product.images[0].url// Map image objects to their URLs
-        };
+            // Simplify the product representation for the view
+            const productForView = {
+                id: product._id,
+                title: product.title,
+                price: product.price,
+                link: product.link, // Assuming there's a link field
+                images: product.images[0].url// Map image objects to their URLs
+            };
 
-        // Check if the category already exists in the categorizedProducts object
-        if (!categorizedProducts[category]) {
-            // If not, create a new array for this category
-            categorizedProducts[category] = [];
+            // Check if the category already exists in the categorizedProducts object
+            if (!categorizedProducts[category]) {
+                // If not, create a new array for this category
+                categorizedProducts[category] = [];
+            }
+
+            // Add the simplified product representation to the appropriate category array
+            categorizedProducts[category].push(productForView);
         }
-
-        // Add the simplified product representation to the appropriate category array
-        categorizedProducts[category].push(productForView);
     });
 
     const post = categorizedProducts['Pantry'] ? categorizedProducts['Pantry'][0] : null;
@@ -345,18 +347,21 @@ module.exports.renderCat = async (req, res) => {
         // Assuming the category field is an array of strings
 
         if (product.category.some(cat => cat.toLowerCase().includes(queryCategory.toLowerCase()))) {
-            prods.push(product)
-            // Simplify the product representation for the view
-            const productForView = {
-                id: product._id,
-                title: product.title,
-                price: product.price,
-                link: product.link, // Assuming there's a link field
-                images: product.images[0] ? product.images[0].url.replace("http://", "https://") : '' // Safely handle the potential absence of images
-            };
 
-            // Add the simplified product representation to the catProducts array
-            catProducts.push(productForView);
+            if (product.title.includes('Central Market') || product.title.includes('Mi Tienda')) {
+                prods.push(product)
+                // Simplify the product representation for the view
+                const productForView = {
+                    id: product._id,
+                    title: product.title,
+                    price: product.price,
+                    link: product.link, // Assuming there's a link field
+                    images: product.images[0] ? product.images[0].url.replace("http://", "https://") : '' // Safely handle the potential absence of images
+                };
+
+                // Add the simplified product representation to the catProducts array
+                catProducts.push(productForView);
+            }
         }
     });
     const subCategories = [...new Set(prods.flatMap(product => product.sub_category))];
