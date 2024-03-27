@@ -10,7 +10,7 @@
             </button>
         </div>
         <% } %>
-            <% if(typeof success_message !='undefined' ){ %>
+            <% if(typeof order_message !='undefined' ){ %>
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     Activated Drop
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -30,7 +30,12 @@
                                         WEEKLY CART
                                     </button>
                                 </h5>
-                                <a href="/carts/activate_weekly/<%=user_id%>">Activate</a>
+
+                                <%if (weekly_cart.is_paid){%>
+                                    <p> Active Drop</p>
+                                    <%} else {%>
+                                        <a href="/carts/activate_weekly/<%=user_id%>">Activate</a>
+                                        <%}%>
                             </div>
 
                             <div id="collapseWeekly" class="collapse show" aria-labelledby="headingWeekly"
@@ -81,7 +86,11 @@
                                             BY WEEKLY CART
                                         </button>
                                     </h5>
-                                    <a href="/carts/activate_by_weekly/<%=user_id%>">Activate</a>
+                                    <%if (by_weekly_cart.is_paid){%>
+                                        <p> Active Drop</p>
+                                        <%} else {%>
+                                            <a href="/carts/activate_by_weekly/<%=user_id%>">Activate</a>
+                                            <%}%>
                                 </div>
 
                                 <div id="collapseWeekly" class="collapse show" aria-labelledby="headingWeekly"
@@ -133,7 +142,11 @@
                                             </button>
                                         </h5>
 
-                                        <a href="/carts/activate_monthly/<%=user_id%>">Activate</a>
+                                        <%if (monthly_cart.is_paid){%>
+                                            <p> Active Drop</p>
+                                            <%} else {%>
+                                                <a href="/carts/activate_monthly/<%=user_id%>">Activate</a>
+                                                <%}%>
                                     </div>
 
                                     <div id="collapseWeekly" class="collapse show" aria-labelledby="headingWeekly"
@@ -186,7 +199,11 @@
                                                 </button>
                                             </h5>
 
-                                            <a href="/carts/activate_one_time/<%=user_id%>">Activate</a>
+                                            <%if (monthly_cart.is_paid){%>
+                                                <p> Active Drop</p>
+                                                <%} else {%>
+                                                    <a href="/carts/activate_one_time/<%=user_id%>">Activate</a>
+                                                    <%}%>
                                         </div>
 
                                         <div id="collapseWeekly" class="collapse show" aria-labelledby="headingWeekly"

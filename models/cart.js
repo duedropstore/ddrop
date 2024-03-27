@@ -15,7 +15,9 @@ const CartSchema = new Schema({
         ref: 'Pre_order'
     }],
     Slot: String,
-    Reccurance: String
+    Reccurance: String,
+    is_paid: Boolean,
+    stripe_id: String
 }
 );
 

@@ -17,10 +17,10 @@ const productRoutes = require('./routes/products')
 const cartsRoutes = require('./routes/carts')
 const MongoDBStore = require("connect-mongo")(session);
 const usersRoutes = require('./routes/users')
-
+const Cart = require('./models/cart')
 const User = require('./models/user');
 const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
-
+const stripe = require('stripe')('sk_test_51Ojs7rEnfB1QEXtGFGG4ccnTtIEZg6BNTP332QLOglgFFB5k6gqJQ1QBw8ullAoiKG2xaGokPfFIQzn9CBvp0rmE00F2b3gSLZ');
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -156,7 +156,299 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', { err })
 })
 
-const port = process.env.PORT || 3000;
+// app.post('/webhook', express.raw({ type: 'application/json' }), async (request, response) => {
+//     // Handle the event
+//     console.log('handling')
+//     const endpointSecret = process.env.WHOOK
+//     const sig = request.headers['stripe-signature'];
+//     let event;
+//     try {
+//         event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+
+//     } catch (err) {
+//         response.status(400).send(`Webhook Error: ${err.message}`);
+//         return;
+//     }
+
+//     if (event.type == 'payment_intent.succeeded') {
+//         const cart = await Cart.findById(event.data.object.cart);
+//         if (typeof payment === "object" && payment !== null && Object.keys(payment).length > 0) {
+//             cart.is_paid = true
+//             await cart.save()
+//         }
+//     }
+
+
+// Return a 200 response to acknowledge receipt of the event
+//     response.send(); // The payment was successful, send an email to the customer
+
+// })
+
+const endpointSecret = "whsec_3c72d3179c5066e16b1ebd439efe7a2076efc580b6442734e4437ca308d8f71c";
+
+app.post('/webhook', express.raw({ type: 'application/json' }), (request, response) => {
+    console.log('webhook')
+    const sig = request.headers['stripe-signature'];
+
+    let event;
+
+    try {
+        event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    } catch (err) {
+        response.status(400).send(`Webhook Error: ${err.message}`);
+        return;
+    }
+
+    // Handle the event
+    switch (event.type) {
+        case 'payment_intent.succeeded':
+            const paymentIntentSucceeded = event.data.object;
+            // Then define and call a function to handle the event payment_intent.succeeded
+            break;
+        // ... handle other event types
+        default:
+            console.log(`Unhandled event type ${event.type}`);
+    }
+
+    // Return a 200 response to acknowledge receipt of the event
+    response.send();
+});
+
+app.get('/webhook', express.raw({ type: 'application/json' }), (request, response) => {
+    console.log('webhook')
+    const sig = request.headers['stripe-signature'];
+
+    let event;
+
+    try {
+        event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    } catch (err) {
+        response.status(400).send(`Webhook Error: ${err.message}`);
+        return;
+    }
+
+    // Handle the event
+    switch (event.type) {
+        case 'payment_intent.succeeded':
+            const paymentIntentSucceeded = event.data.object;
+            // Then define and call a function to handle the event payment_intent.succeeded
+            break;
+        // ... handle other event types
+        default:
+            console.log(`Unhandled event type ${event.type}`);
+    }
+
+    // Return a 200 response to acknowledge receipt of the event
+    response.send();
+});
+
+
+app.get('/complete_order_weekly/:id', async (req, res) => {
+    const { id } = req.params
+    const cart = await Cart.findById(id).populate('place')
+    cart.is_paid = true
+    req.session.cart = []
+    const post_author = await User.findById(order.place.author)
+    post_author.orders_to_complete.push(order)
+    req.session.orders.push(order)
+    const orders = req.session.orders
+    const order_message = 'true'
+    await cart.save()
+    if (req.user) {
+        console.log('renderCart')
+        const { id } = req.user._id
+        const user = await User.findById(id.toString('hex'))
+        console.log(user)
+        weekly_cart = await Cart.findById(user.weekly_cart.id.toString('hex')).populate({
+            path: 'pre_orders',
+            populate: {
+                path: 'product'
+            }
+        })
+        monthly_cart = await Cart.findById(user.monthly_cart.id.toString('hex')).populate({
+            path: 'pre_orders',
+            populate: {
+                path: 'product'
+            }
+        })
+        by_weekly_cart = await Cart.findById(user.by_weekly_cart.id.toString('hex')).populate({
+            path: 'pre_orders',
+            populate: {
+                path: 'product'
+            }
+        })
+        one_time_cart = await Cart.findById(user.by_weekly_cart.id.toString('hex')).populate({
+            path: 'pre_orders',
+            populate: {
+                path: 'product'
+            }
+        })
+        if (weekly_cart || monthly_cart || one_time_cart || by_weekly_cart > 0) {
+            const cart_message = false
+            const delete_message = false
+            console.log('weekly', weekly_cart)
+            console.log('monthly', monthly_cart)
+            console.log('by_weekly', by_weekly_cart)
+            console.log('one_time', one_time_cart)
+            const user_id = id.toString('hex')
+            res.render('users/render_cart', { order_message, delete_message, cart_message, weekly_cart, monthly_cart, one_time_cart, by_weekly_cart, user_id })
+
+        };
+    }
+})
+
+
+app.get('/complete_order_monthly/:id', async (req, res) => {
+    const { id } = req.params
+    const cart = await Cart.findById(id).populate('place')
+    cart.is_paid = true
+    const orders = req.session.orders
+    const order_message = 'true'
+    await cart.save()
+
+    if (req.user) {
+        console.log('renderCart')
+        const { id } = req.user._id
+        const user = await User.findById(id.toString('hex'))
+        console.log(user)
+        weekly_cart = await Cart.findById(user.weekly_cart.id.toString('hex')).populate({
+            path: 'pre_orders',
+            populate: {
+                path: 'product'
+            }
+        })
+        monthly_cart = await Cart.findById(user.monthly_cart.id.toString('hex')).populate({
+            path: 'pre_orders',
+            populate: {
+                path: 'product'
+            }
+        })
+        by_weekly_cart = await Cart.findById(user.by_weekly_cart.id.toString('hex')).populate({
+            path: 'pre_orders',
+            populate: {
+                path: 'product'
+            }
+        })
+        one_time_cart = await Cart.findById(user.by_weekly_cart.id.toString('hex')).populate({
+            path: 'pre_orders',
+            populate: {
+                path: 'product'
+            }
+        })
+        if (weekly_cart || monthly_cart || one_time_cart || by_weekly_cart > 0) {
+            const cart_message = false
+            const delete_message = false
+            console.log('weekly', weekly_cart)
+            console.log('monthly', monthly_cart)
+            console.log('by_weekly', by_weekly_cart)
+            console.log('one_time', one_time_cart)
+            const user_id = id.toString('hex')
+            res.render('users/render_cart', { order_message, delete_message, cart_message, weekly_cart, monthly_cart, one_time_cart, by_weekly_cart, user_id })
+
+        };
+    }
+})
+app.get('/complete_order_by_weekly/:id', async (req, res) => {
+    const { id } = req.params
+    const cart = await Cart.findById(id).populate('place')
+    cart.is_paid = true
+    const orders = req.session.orders
+    const order_message = 'true'
+    await cart.save()
+    if (req.user) {
+        console.log('renderCart')
+        const { id } = req.user._id
+        const user = await User.findById(id.toString('hex'))
+        console.log(user)
+        weekly_cart = await Cart.findById(user.weekly_cart.id.toString('hex')).populate({
+            path: 'pre_orders',
+            populate: {
+                path: 'product'
+            }
+        })
+        monthly_cart = await Cart.findById(user.monthly_cart.id.toString('hex')).populate({
+            path: 'pre_orders',
+            populate: {
+                path: 'product'
+            }
+        })
+        by_weekly_cart = await Cart.findById(user.by_weekly_cart.id.toString('hex')).populate({
+            path: 'pre_orders',
+            populate: {
+                path: 'product'
+            }
+        })
+        one_time_cart = await Cart.findById(user.by_weekly_cart.id.toString('hex')).populate({
+            path: 'pre_orders',
+            populate: {
+                path: 'product'
+            }
+        })
+        if (weekly_cart || monthly_cart || one_time_cart || by_weekly_cart > 0) {
+            const cart_message = false
+            const delete_message = false
+            console.log('weekly', weekly_cart)
+            console.log('monthly', monthly_cart)
+            console.log('by_weekly', by_weekly_cart)
+            console.log('one_time', one_time_cart)
+            const user_id = id.toString('hex')
+            res.render('users/render_cart', { order_message, delete_message, cart_message, weekly_cart, monthly_cart, one_time_cart, by_weekly_cart, user_id })
+
+        };
+    }
+})
+
+app.get('/complete_order_one_time/:id', async (req, res) => {
+    const { id } = req.params
+    constcartr = await Cart.findById(id).populate('place')
+    cart.is_paid = true
+    const order_message = 'true'
+    await cart.save()
+    if (req.user) {
+        console.log('renderCart')
+        const { id } = req.user._id
+        const user = await User.findById(id.toString('hex'))
+        console.log(user)
+        weekly_cart = await Cart.findById(user.weekly_cart.id.toString('hex')).populate({
+            path: 'pre_orders',
+            populate: {
+                path: 'product'
+            }
+        })
+        monthly_cart = await Cart.findById(user.monthly_cart.id.toString('hex')).populate({
+            path: 'pre_orders',
+            populate: {
+                path: 'product'
+            }
+        })
+        by_weekly_cart = await Cart.findById(user.by_weekly_cart.id.toString('hex')).populate({
+            path: 'pre_orders',
+            populate: {
+                path: 'product'
+            }
+        })
+        one_time_cart = await Cart.findById(user.by_weekly_cart.id.toString('hex')).populate({
+            path: 'pre_orders',
+            populate: {
+                path: 'product'
+            }
+        })
+        if (weekly_cart || monthly_cart || one_time_cart || by_weekly_cart > 0) {
+            const cart_message = false
+            const delete_message = false
+            console.log('weekly', weekly_cart)
+            console.log('monthly', monthly_cart)
+            console.log('by_weekly', by_weekly_cart)
+            console.log('one_time', one_time_cart)
+            const user_id = id.toString('hex')
+            res.render('users/render_cart', { order_message, delete_message, cart_message, weekly_cart, monthly_cart, one_time_cart, by_weekly_cart, user_id })
+
+        };
+    }
+})
+
+
+const port = process.env.PORT || 4242;
 app.listen(port, () => {
     console.log(`Serving on port ${port}`)
 })

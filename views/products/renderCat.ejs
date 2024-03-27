@@ -1,198 +1,216 @@
-<% layout('layouts/boilerplate_no_nav') %>
+<!DOCTYPE html>
+<html>
 
-    <!DOCTYPE html>
-    <html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Categories</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+        integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <style>
+        body {
+            padding-top: 1rem;
+        }
 
-    <head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="/stylesheets/stars.css">
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            height: 100%;
+        }
 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Product Categories</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
-            integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+        .product-card img {
+            max-width: 100%;
+            object-fit: cover;
+            height: 150px;
+        }
 
-        <style>
-            /* Add this to your CSS to create a black outline on your text input */
+        .navbar {
+            background-color: white;
+            /* Sets the background color to white */
+            padding-top: 0.25rem;
+            /* Reduces the top padding */
+            padding-bottom: 0.25rem;
+            /* Reduces the bottom padding */
+        }
 
+        .product-card-body {
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
 
-            .navbar {
-                background-color: white;
-                /* Sets the background color to white */
-                padding-top: 0.25rem;
-                /* Reduces the top padding */
-                padding-bottom: 0.25rem;
-                /* Reduces the bottom padding */
+        .product-price {
+            font-weight: bold;
+        }
+
+        .product-title {
+            margin: 0.5rem 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .slider {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .product {
+            flex: 0 0 auto;
+            width: 200px;
+            /* Adjust based on your preference */
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .add-to-cart-btn {
+            margin-top: auto;
+            text-align: center;
+            padding: 0.5rem;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 0.25rem;
+        }
+
+        @media (max-width: 576px) {
+            .row-cols-2 {
+                --bs-cols: 4;
             }
+        }
 
-            .nav-link:hover {
-                text-decoration: underline;
-            }
+        .footer {
+            position: fixed;
+            /* Fixes the footer position */
+            bottom: 0;
+            /* Anchors the footer to the bottom of the screen */
+            width: 100%;
+            /* Ensures the footer extends full width */
+            z-index: 100;
+            /* Ensures the footer stays above other content */
+            background-color: white;
+        }
 
-            @media (min-width: 700px) {
-                .form-inline .form-control {
-                    width: 250px;
-                    /* Adjust based on your preference */
-                }
-            }
+        /* To ensure content is not hidden behind the footer */
+        body {
+            padding-bottom: 50px;
+            /* Add padding equal to the height of the footer */
+        }
+    </style>
+</head>
 
-
-
-            input[type="text"] {
-                border: 1px solid black;
-            }
-
-            .category-container {
-                margin-bottom: 40px;
-            }
-
-            .slider {
-                display: flex;
-                overflow-x: auto;
-                gap: 20px;
-                padding: 10px;
-            }
-
-            .product {
-                flex: 0 0 auto;
-                width: 200px;
-                /* Adjust based on your preference */
-                border: 1px solid #ccc;
-                padding: 10px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-
-            .add-to-cart-btn {
-                display: block;
-                margin-top: 10px;
-                background-color: #007bff;
-                color: white;
-                text-align: center;
-                padding: 5px 10px;
-                text-decoration: none;
-                border-radius: 5px;
-            }
-
-            .img-fluid {
-                max-width: 100%;
-                height: auto;
-            }
-        </style>
-    </head>
-
-
-    <body>
-
-        <nav class="navbar sticky-top navbar-expand-lg navbar-light" style="border-bottom: 1px solid #000;">
-            <div class="container-fluid">
-                <!-- Navbar Toggler -->
-                <!-- Mobile Search Form (visible only on xs to md) -->
-                <div class="mx-auto d-none d-lg-block">
-                    <form class="form-inline d-flex justify-content-center">
-                        <input class="form-control" type="search" placeholder="Search for products" aria-label="Search">
-                        <button class="btn btn-outline-success ml-2" type="submit">Search</button>
-                    </form>
-                </div>
-
-                <div class="mx-auto d-lg-none">
-                    <form class="form-inline d-flex justify-content-center">
-                        <input class="form-control" type="search" placeholder="Search for products" aria-label="Search">
-                        <button class="btn btn-outline-success ml-2" type="submit">Search</button>
-                    </form>
-                </div>
-                <br>
-                <!-- Centered Search Form -->
-
-                <!-- Collapsible content -->
-                <!-- Links to show in the burger bar -->
-                <div class="navbar-nav mr-auto mt-2 mt-lg-0">
-                    <%if(!currentUser) {%>
-
-                        <a class="nav-item nav-link text-dark" href="/login">Login</a>
-                        <a class="nav-item nav-link text-dark" href="/register">Register</a>
-                        <%}%>
-
-
-                </div>
-                <% if (catProducts){%>
-                    <div class="slider">
-                        <% for (let category of subCategories) { %>
-                            <div class="product">
-                                <a href="/products/render_sub_cat?sub_category=<%=category%>">
-                                    <%=category%>>
-                                </a>
-                            </div>
-                            <% }; %>
-                    </div>
-                    <%}%>
-
-
-
+<body>
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light" style="border-bottom: 1px solid #000;">
+        <div class="container-fluid">
+            <!-- Navbar Toggler -->
+            <!-- Mobile Search Form (visible only on xs to md) -->
+            <div class="mx-auto d-none d-lg-block">
+                <form class="form-inline d-flex justify-content-center">
+                    <input class="form-control" type="search" placeholder="Search for products" aria-label="Search">
+                    <button class="btn btn-outline-success ml-2" type="submit">Search</button>
+                </form>
             </div>
-        </nav>
 
-        <style>
-            .nav-link:hover {
-                text-decoration: underline;
-            }
+            <div class="mx-auto d-lg-none">
+                <form class="form-inline d-flex justify-content-center">
+                    <input class="form-control" type="search" placeholder="Search for products" aria-label="Search">
+                    <button class="btn btn-outline-success ml-2" type="submit">Search</button>
+                </form>
+            </div>
+            <br>
+            <!-- Centered Search Form -->
 
-            @media (min-width: 700px) {
-                .form-inline .form-control {
-                    width: 250px;
-                    /* Adjust based on your preference */
-                }
-            }
-        </style>
+            <!-- Collapsible content -->
+            <!-- Links to show in the burger bar -->
+
+            <% if (subCategories){%>
+                <div class="slider">
+                    <% for (let category of subCategories) { %>
+                        <div class="product">
+                            <a href="/products/render_cat?category=<%=category%>">
+                                <%=category%>>
+                            </a>
+                        </div>
+                        <% }; %>
+                </div>
+                <%}%>
+
+
+
+        </div>
+    </nav>
+    <div class="container">
         <h1>Products in <%= queryCategory %>
         </h1>
-        <div class="container">
-            <% if(catProducts && catProducts.length> 0) { %>
-                <div class="row">
-                    <% catProducts.forEach(function(product, index) { %>
-                        <div class="col-6 col-md-3 mb-4"> <!-- Notice the change here -->
-                            <div class="product h-100">
-                                <% if(product.images) { %>
-                                    <img class="img-fluid" src="<%= product.images %>" alt="<%= product.title %>">
-                                    <% } %>
-                                        <small> $<%= product.price %> <br>
-                                                <%= product.title %></small><br>
-
-
-                                        <!-- <a href="<%= product.link %>">View Product</a> -->
+        <% if(catProducts && catProducts.length> 0) { %>
+            <div class="row row-cols-2 row-cols-md-4 g-4">
+                <% catProducts.forEach(function(product) { %>
+                    <div class="col">
+                        <div class="product-card">
+                            <% if(product.images) { %>
+                                <img src="<%= product.images %>" alt="<%= product.title %>">
+                                <% } %>
+                                    <div class="product-card-body">
+                                        <h5 class="product-title">
+                                            <%= product.title %>
+                                        </h5>
+                                        <p class="product-price">$<%= product.price %>
+                                        </p>
                                         <form action="/carts/add_to_cart" method="GET">
-                                            <small>Quantity</small>
-                                            <select id="how_many" name="how_many" class="form-control">
-                                                <% for (let i=1; i <=5; i++) { %>
-                                                    <option value="<%= i %>">
-                                                        <%= i %>
-                                                    </option>
-                                                    <% } %>
-                                            </select>
-                                            <small>Recurrance</small>
-                                            <select id="time_frame" name="time_frame" class="form-control" required>
-                                                <option value="Weekly">Weekly</option>
-                                                <option value="One Time">One Time</option>
-                                                <option value="By Weekly">By Weekly</option>
-                                                <option value="Monthly">Monthly</option>
-                                            </select>
-                                            <!-- Add to Cart Button -->
-                                            <button class="btn mt-2 btn-outline-secondary btn-block"><small>Add to
-                                                    Cart</small></button>
+                                            <div class="mb-3">
+                                                <label for="how_many" class="form-label">Quantity</label>
+                                                <select id="how_many" name="how_many" class="form-control">
+                                                    <% for (let i=1; i <=5; i++) { %>
+                                                        <option value="<%= i %>">
+                                                            <%= i %>
+                                                        </option>
+                                                        <% } %>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="time_frame" class="form-label">Recurrance</label>
+                                                <select id="time_frame" name="time_frame" class="form-control">
+                                                    <option value="Weekly">Weekly</option>
+                                                    <option value="One Time">One Time</option>
+                                                    <option value="Bi-Weekly">Bi-Weekly</option>
+                                                    <option value="Monthly">Monthly</option>
+                                                </select>
+                                            </div>
                                             <input type="hidden" name="id" value="<%= product.id %>">
+                                            <button type="submit" class="add-to-cart-btn">Add to Cart</button>
                                         </form>
-                            </div>
+                                    </div>
                         </div>
-                        <% if((index + 1) % 4===0 && index + 1 < catProducts.length) { %>
-                </div>
-                <div class="row">
-                    <% } %>
-                        <% }); %>
-                </div>
-                <% } else { %>
-                    <p>No products available in this category.</p>
-                    <% } %>
-        </div>
+                    </div>
+                    <% }); %>
+            </div>
+            <% } else { %>
+                <p class="text-center">No products available in this category.</p>
+                <% } %>
+    </div>
 
-    </body>
+    <footer class="footer bg-dark py-3 mt-auto bg-primary">
+        <footer class="footer bg-dark py-3 text-center">
+            <button class="nav-btn" onclick="location.href='/products'">
+                <img src="https://res.cloudinary.com/squr/image/upload/v1710771278/path-to-home-icon.png_hd6crp.png"
+                    alt="Home">
+            </button>
+            <button class="nav-btn" onclick="location.href='/carts/render'">
+                <img src="https://res.cloudinary.com/squr/image/upload/v1710771537/kyfrohwfvdhhpi8hg5gf.png" alt="Cart">
+            </button>
+            <button class="nav-btn" onclick="location.href='/aisles'">
+                <img src="https://res.cloudinary.com/squr/image/upload/v1710771617/icons8-four-squares-50_ein4h6.png"
+                    alt="Aisles">
+            </button>
+        </footer>
+    </footer>
 
-    </html>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.

@@ -221,14 +221,15 @@ module.exports.activateWeekly = async (req, res) => {
 
     try {
         const session = await stripe.checkout.sessions.create({
-            success_url: "http://localhost:3000/success", // Adjust URLs as necessary
+            success_url: `http://localhost:3000/complete_order_weekly/${cart.id}`, // Adjust URLs as necessary
             cancel_url: "http://localhost:3000/cancel",
             payment_method_types: ["card"],
             mode: "subscription",
             billing_address_collection: "auto",
             line_items: lineItems,
             metadata: {
-                userId: id, // or any other metadata you need
+                userId: id,
+                cart: cart.id // or any other metadata you need
             },
             // customer_email: user.email, // Uncomment if you want to specify the customer email
             // Assuming `customer` is a Stripe Customer ID stored in your user model
@@ -275,7 +276,7 @@ module.exports.activateByWeekly = async (req, res) => {
 
     try {
         const session = await stripe.checkout.sessions.create({
-            success_url: "http://localhost:3000/success", // Adjust URLs as necessary
+            success_url: `http://localhost:3000/complete_order_by_weekly/${cart.id}`, // Adjust URLs as necessary
             cancel_url: "http://localhost:3000/cancel",
             payment_method_types: ["card"],
             mode: "subscription",
@@ -329,7 +330,7 @@ module.exports.activateMonthly = async (req, res) => {
 
     try {
         const session = await stripe.checkout.sessions.create({
-            success_url: "http://localhost:3000/success", // Adjust URLs as necessary
+            success_url: `http://localhost:3000/complete_order_monthly/${cart.id}`, // Adjust URLs as necessary
             cancel_url: "http://localhost:3000/cancel",
             payment_method_types: ["card"],
             mode: "subscription",
@@ -382,7 +383,7 @@ module.exports.activateOneTime = async (req, res) => {
 
     try {
         const session = await stripe.checkout.sessions.create({
-            success_url: "http://localhost:3000/success", // Adjust URLs as necessary
+            success_url: `http://localhost:3000/complete_order_one_time/${cart.id}`, // Adjust URLs as necessary
             cancel_url: "http://localhost:3000/cancel",
             payment_method_types: ["card"],
             mode: "subscription",
